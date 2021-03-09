@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kickstart-www
+  name: kickstart-www
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kickstart-www
+  template:
+    metadata:
+      labels:
+        app: kickstart-www
+    spec:
+      volumes:
+        - name: kickstart-www-storage
+          nfs: 
+            server: nas.crazyzone.be 
+            path: /volume1/docker-storage/kickstart
+      containers:
+      - image: httpd:latest
+        name: kickstart-www
+        ports:
+        - containerPort: 80
+          name: kickstart-www
+        volumeMounts:
+        - name: kickstart-www-storage
+          mountPath: /usr/local/apache2/htdocs/        
